@@ -75,6 +75,22 @@ def get_fichas() -> list:
     #Fecha o cliente do whatsapp
     whats.close()
     
-    return ficha_list()
+    return ficha_list
         
-
+def process_ficha(ficha : str) -> dict:
+        ficha =  ficha.replace("\n","")
+        ficha_list = ficha.split("•")
+        ficha_list.pop(0)
+        ficha_dict = {}
+        for f in ficha_list:
+                f = f.split(":")
+                f[0] = f[0].strip()
+                if len(f) < 2:
+                        print(f[0])
+                        continue
+                f[1] = f[1].strip()
+                ficha_dict[f[0]] = f[1]
+        print(ficha_dict)
+        
+f_list = get_fichas()
+process_ficha(f_list[0])

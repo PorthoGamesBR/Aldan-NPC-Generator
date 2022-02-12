@@ -45,7 +45,7 @@ def get_messages(whats : Whatsapp, contact : str, msg_ammount = 200) -> list:
     selected_contact.click()
     
     #Carrega mais mensagens da conversa
-    whats.scroll_chat(msg_ammount/2)
+    whats.scroll_chat(int(msg_ammount/2))
     
     #Abre todas as mensagens com "ler mais" e pega o conteudo delas, convertendo para texto
     msg_class_name = "_1Gy50"
