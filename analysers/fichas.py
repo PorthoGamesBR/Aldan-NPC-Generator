@@ -1,9 +1,6 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-import time
+from webbrowser import get
+import whats_reader
 
-chr_service = Service("drivers/chromedriver.exe")
-driver = webdriver.Chrome(service=chr_service)
-driver.get("https://google.com")
-time.sleep(10)
-driver.close()
+whats = whats_reader.Whatsapp()
+
+whats_reader.get_messages(whats, "⚜️Aliança : Grupo Fichas 🔰")
