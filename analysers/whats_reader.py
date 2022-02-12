@@ -28,7 +28,7 @@ class Whatsapp:
     def close(self):
         self.driver.close()
         
-def get_messages(whats : Whatsapp, contact : str) -> list:
+def get_messages(whats : Whatsapp, contact : str, msg_ammount = 200) -> list:
     
     #Acha a barra de pesquisa e clica pra que ela pesquise
     inp_xpath_search = "//button[@aria-label='Pesquisar ou começar uma nova conversa']"
@@ -45,7 +45,7 @@ def get_messages(whats : Whatsapp, contact : str) -> list:
     selected_contact.click()
     
     #Carrega mais mensagens da conversa
-    whats.scroll_chat(100)
+    whats.scroll_chat(msg_ammount/2)
     
     #Abre todas as mensagens com "ler mais" e pega o conteudo delas, convertendo para texto
     msg_class_name = "_1Gy50"
