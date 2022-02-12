@@ -1,4 +1,5 @@
 from selenium import webdriver
+from webbrowser import get
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys 
@@ -23,6 +24,9 @@ class Whatsapp:
             body.send_keys(Keys.HOME)
             time.sleep(0.05)
             #TODO:Adicionar trava para quando browser estiver carregando
+    
+    def close(self):
+        self.driver.close()
         
 def get_messages(whats : Whatsapp, contact : str) -> list:
     
@@ -55,6 +59,8 @@ def get_messages(whats : Whatsapp, contact : str) -> list:
     for m in message_list:
         #Encode para UTF8 por que as mensagens podem ter emojis
         message_text_list.append(m.text.encode('utf8'))
+    
+    return message_text_list
     
 
     
