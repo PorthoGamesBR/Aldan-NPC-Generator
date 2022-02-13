@@ -78,19 +78,50 @@ def get_fichas() -> list:
     return ficha_list
         
 def process_ficha(ficha : str) -> dict:
-        ficha =  ficha.replace("\n","")
+        #Divide os campos
         ficha_list = ficha.split("•")
+        
+        #Tira o header da ficha
         ficha_list.pop(0)
+        
+        #Cria  e popula o dicionário com as informações da ficha
         ficha_dict = {}
+        
+        #Para cada campo na lista...
         for f in ficha_list:
+                #Divide cada campo
                 f = f.split(":")
+                
+                #Limpa as keys
                 f[0] = f[0].strip()
-                if len(f) < 2:
+                
+                #Processa os campos
+                if f[0] == 'Itens':
+                        f[1] = f[1].replace("não inclui relíquias","")
+                        f[1] = f[1].split("\n")
+                elif f[0] == 'Habilidades' or f[0] == 'Magias':
+                        f[1] = f[1].split("\n")
+                else:
+                        #Limpa os pulos de linha
+                        f =  f.replace("\n","")
+                
+                if f[0] == 'Sanidade':
+                        f[1] = f[1].replace("Campos Especiais Deixar em branco no início. ","")
+                elif f[0] == 'Fama':
+                        f[1] = f[1].replace(" Campos Adicionais          Obrigatório!","")
+        
+                #Nao adiciona se não for par
+                if len(f) < 2:          
                         print(f[0])
                         continue
+                
+                #Limpa o value
                 f[1] = f[1].strip()
+                
+                #Adiciona ao dicionário
                 ficha_dict[f[0]] = f[1]
-        print(ficha_dict)
+                
+        return ficha_dict
         
 f_list = get_fichas()
 process_ficha(f_list[0])
