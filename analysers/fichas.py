@@ -1,3 +1,4 @@
+from fileinput import filename
 import whats_reader
 
 ficha_head = """ A L I A N Ç A 
@@ -127,6 +128,92 @@ def process_ficha(ficha : str) -> dict:
                 ficha_dict[f[0]] = f[1]
                 
         return ficha_dict
+
+def process_fichaII(ficha : str) -> dict:
+        special_chars = ["•","_"]
+        messages_to_rmv = ["não inclui relíquias","Deixar em branco no início.","Obrigatório!","Campos Especiais","Campos Adicionais"]
         
-f_list = get_fichas()
-print(process_ficha(f_list[0]))
+        #Divide os campos
+        ficha_list = ficha.split("\n")
+        
+        for i in range(6):
+                ficha_list.pop(0)
+        
+        add_itens = False
+        add_hab = False
+        add_mag = False
+        add_tit = False
+        
+
+        tits = ['Títulos']
+        
+        ficha_dict = {}
+        
+        for f in ficha_list:
+
+                for c in special_chars:
+                        f = f.replace(c,"")
+                
+                f = f.strip()
+                        
+                if f == '' or f in messages_to_rmv:
+                        continue
+                   
+                f = f.split(":")
+                
+                if f[0] == "Itens":
+                        add_itens = True
+                        ficha_dict["Itens"] = []
+                        continue
+                elif f[0] == "Nível":
+                        add_itens = False
+                elif f[0] == "Habilidades":
+                        add_hab = True
+                        ficha_dict['Habilidades'] = []
+                        continue             
+                elif f[0] == "Magias":
+                        add_hab = False
+                        add_mag = True
+                        ficha_dict["Magias"] = []
+                        continue
+                elif f[0] == "G$":
+                        add_mag = False
+                elif f[0] == "Títulos":
+                        add_tit = True
+                        ficha_dict["Títulos"] = []
+                        continue
+                elif f[0] == 'Profissão':
+                        add_tit = False
+                
+                if add_itens or add_hab or add_mag or add_tit:
+                        for h in f:                              
+                                if add_itens:
+                                        ficha_dict["Itens"].append(h)
+                                elif add_hab:
+                                        ficha_dict['Habilidades'].append(h)
+                                elif add_mag:
+                                        ficha_dict["Magias"].append(h)
+                                elif add_tit:
+                                        ficha_dict["Títulos"].append(h)
+                        continue
+                
+                
+                if len(f) > 1:
+                        if len(f) > 2:
+                                ficha_dict[f[0]] = [i for i in f[1:] if i != ""]
+                        else:               
+                                ficha_dict[f[0]] = f[1]
+        
+        return ficha_dict
+
+
+f_list = []
+with open("analysers/fichas_example.txt", "rb") as file:
+        f_text = file.read().decode("utf8")
+        f_list = f_text.split("-----------------------------------------------------------------------------------------------")
+
+for i in range(4):
+        f_dict = process_fichaII(f_list[i])
+        for key, value in f_dict.items():
+                print(f"{key} : {value}")
+        print("\n \n---------------------------- \n")
