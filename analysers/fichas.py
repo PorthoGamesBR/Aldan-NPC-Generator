@@ -62,7 +62,7 @@ def get_fichas() -> list:
     whats = whats_reader.Whatsapp()
 
     #Pega a lista de mensagens do grupo de fichas
-    message_list = whats_reader.get_messages(whats, grupo_fichas)
+    message_list = whats_reader.get_messages(whats, grupo_fichas,10)
     ficha_list = []
 
     #Processa todas as mensagens
@@ -94,29 +94,34 @@ def process_ficha(ficha : str) -> dict:
                 
                 #Limpa as keys
                 f[0] = f[0].strip()
+                f[0] =  f[0].replace("\n","")
                 
-                #Processa os campos
-                if f[0] == 'Itens':
-                        f[1] = f[1].replace("não inclui relíquias","")
-                        f[1] = f[1].split("\n")
-                elif f[0] == 'Habilidades' or f[0] == 'Magias':
-                        f[1] = f[1].split("\n")
-                else:
-                        #Limpa os pulos de linha
-                        f =  f.replace("\n","")
-                
-                if f[0] == 'Sanidade':
-                        f[1] = f[1].replace("Campos Especiais Deixar em branco no início. ","")
-                elif f[0] == 'Fama':
-                        f[1] = f[1].replace(" Campos Adicionais          Obrigatório!","")
-        
                 #Nao adiciona se não for par
                 if len(f) < 2:          
                         print(f[0])
                         continue
                 
-                #Limpa o value
-                f[1] = f[1].strip()
+                #Processa os campos
+                if f[0] == 'Itens':
+                        f[1] = f[1].replace("não inclui relíquias","")
+                        f[1] = f[1].split("\n")
+                        if isinstance(f[1],list):
+                                f[1] = [i for i in f[1] if i != "" and i != " -"]
+                elif f[0] == 'Habilidades' or f[0] == 'Magias':
+                        f[1] = f[1].split("\n")
+                        if isinstance(f[1],list):
+                                f[1] = [i for i in f[1] if i != ""]
+                else:
+                        #Limpa os pulos de linha
+                        f[1] =  f[1].replace("\n","")
+                        #Limpa o value
+                        f[1] = f[1].strip()
+                
+                if f[0] == 'Sanidade':
+                        f[1] = f[1].replace("Campos Especiais Deixar em branco no início.","")
+                elif f[0] == 'Fama':
+                        f[1] = f[1].replace(" Campos Adicionais          Obrigatório!","")
+                
                 
                 #Adiciona ao dicionário
                 ficha_dict[f[0]] = f[1]
@@ -124,4 +129,4 @@ def process_ficha(ficha : str) -> dict:
         return ficha_dict
         
 f_list = get_fichas()
-process_ficha(f_list[0])
+print(process_ficha(f_list[0]))
