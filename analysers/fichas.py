@@ -129,7 +129,7 @@ def process_ficha(ficha : str) -> dict:
                 
         return ficha_dict
 
-def process_fichaII(ficha : str) -> dict:
+def process_ficha_with_lists(ficha : str) -> dict:
         special_chars = ["•","_"]
         messages_to_rmv = ["não inclui relíquias","Deixar em branco no início.","Obrigatório!","Campos Especiais","Campos Adicionais"]
         
@@ -213,7 +213,7 @@ with open("analysers/fichas_example.txt", "rb") as file:
         f_list = f_text.split("-----------------------------------------------------------------------------------------------")
 
 for i in range(4):
-        f_dict = process_fichaII(f_list[i])
+        f_dict = process_ficha_with_lists(f_list[i])
         for key, value in f_dict.items():
                 print(f"{key} : {value}")
         print("\n \n---------------------------- \n")
