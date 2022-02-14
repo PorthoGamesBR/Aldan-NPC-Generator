@@ -129,6 +129,7 @@ def process_ficha(ficha : str) -> dict:
                 
         return ficha_dict
 
+#TODO: Aperfeiçoar leitura de habilidades e magias; Adicionar comentários
 def process_ficha_with_lists(ficha : str) -> dict:
         special_chars = ["•","_"]
         messages_to_rmv = ["não inclui relíquias","Deixar em branco no início.","Obrigatório!","Campos Especiais","Campos Adicionais"]
@@ -206,8 +207,15 @@ def process_ficha_with_lists(ficha : str) -> dict:
         
         return ficha_dict
 
+def process_hab(ficha : str) -> list:
+        pass
 
+def process_magic(ficha : str) -> list:
+        pass
+
+#Abre documento com fichas de exemplo (Pra não precisar abrir o Selenium toda hora)
 f_list = []
+
 with open("analysers/fichas_example.txt", "rb") as file:
         f_text = file.read().decode("utf8")
         f_list = f_text.split("-----------------------------------------------------------------------------------------------")
