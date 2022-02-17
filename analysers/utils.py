@@ -4,7 +4,7 @@ def find_pattern(pat : str, txt : str):
         M = len(pat)
         N = len(txt)
         if M > N:
-                return -1
+                return [-1]
         indexes = []
         for i in range((N - M) + 1):
                 j = 0

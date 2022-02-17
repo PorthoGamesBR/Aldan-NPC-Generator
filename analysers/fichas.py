@@ -1,5 +1,6 @@
 from fileinput import filename
 import whats_reader
+from utils import find_pattern,multisplit
 
 ficha_head = """ A L I A N Ç A 
  Ficha.
@@ -207,21 +208,41 @@ def process_ficha_with_lists(ficha : str) -> dict:
         
         return ficha_dict
 
+
+                      
 def process_hab(ficha : str) -> list:
-        pass
+        to_find = "Habilidades:"
+        ind = find_pattern(to_find, ficha)[0]
+        if(ind < 0):
+                return ["Error"]
+        n_index = ind + len(to_find) - 1
+        all_habs = ficha[n_index]
+        l = ""
+        
+        while l != "•":
+                all_habs += l
+                n_index += 1
+                l = ficha[n_index]
+
+        full_hab = multisplit("\n"," ",":","\r",",", txt=all_habs)
+        full_hab = list(filter(None,full_hab))
+                        
+        return full_hab
 
 def process_magic(ficha : str) -> list:
+        to_find = "Magias:"
         pass
 
 #Abre documento com fichas de exemplo (Pra não precisar abrir o Selenium toda hora)
 f_list = []
 
-with open("analysers/fichas_example.txt", "rb") as file:
-        f_text = file.read().decode("utf8")
+with open("fichas_example.txt", "rb") as file:
+        f_text = file.read().decode("utf-8")
         f_list = f_text.split("-----------------------------------------------------------------------------------------------")
 
-for i in range(4):
-        f_dict = process_ficha_with_lists(f_list[i])
-        for key, value in f_dict.items():
-                print(f"{key} : {value}")
+for i in range(len(f_list)):
+        h_list = process_hab(f_list[i])
+        for h in h_list:
+                print(h)
         print("\n \n---------------------------- \n")
+        
