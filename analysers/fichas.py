@@ -208,41 +208,52 @@ def process_ficha_with_lists(ficha : str) -> dict:
         
         return ficha_dict
 
-
-                      
-def process_hab(ficha : str) -> list:
-        to_find = "Habilidades:"
+#Recebe a ficha como string, uma string com o nome da lista que deve ser processada, e aonde essa lista precisa terminar   
+def process_list_of_habs(ficha : str,to_find : str, ending : str) -> list:
         ind = find_pattern(to_find, ficha)[0]
+        m_ind = find_pattern(ending, ficha)[0]
+                
         if(ind < 0):
                 return ["Error"]
         n_index = ind + len(to_find) - 1
         all_habs = ficha[n_index]
         l = ""
         
-        while l != "•":
-                all_habs += l
-                n_index += 1
-                l = ficha[n_index]
+        if m_ind > 0:
+                while n_index < m_ind:
+                        all_habs += l
+                        n_index += 1
+                        l = ficha[n_index]
+        else:
+                while l != "•":
+                        all_habs += l
+                        n_index += 1
+                        l = ficha[n_index]
 
-        full_hab = multisplit("\n"," ",":","\r",",", txt=all_habs)
+        full_hab = multisplit('\n'," ",":",'\r',",", txt=all_habs)
+        for h in range(len(full_hab)):
+                if type(full_hab[h]) == str:
+                        full_hab[h] = full_hab[h].replace("•","").replace("\\n","").replace("\\r","").replace("[","").replace("]","").replace("(","").replace(")","")
         full_hab = list(filter(None,full_hab))
                         
         return full_hab
 
-def process_magic(ficha : str) -> list:
-        to_find = "Magias:"
-        pass
-
 #Abre documento com fichas de exemplo (Pra não precisar abrir o Selenium toda hora)
-f_list = []
+def fichas_sample() -> list:
+        f_list = []
+        with open("fichas_example.txt", "rb") as file:
+                f_text = file.read().decode("utf-8",'replace')
+                f_list = str(f_text).split("-----------------------------------------------------------------------------------------------")
+        return f_list
 
-with open("fichas_example.txt", "rb") as file:
-        f_text = file.read().decode("utf-8")
-        f_list = f_text.split("-----------------------------------------------------------------------------------------------")
-
-for i in range(len(f_list)):
-        h_list = process_hab(f_list[i])
-        for h in h_list:
-                print(h)
-        print("\n \n---------------------------- \n")
+if __name__ == "__main__":
+        f_list = fichas_sample()
+        for i in range(len(f_list)):
+                h_list = process_list_of_habs(f_list[i],"Habilidades:","Magias:")
+                print("Habilidades:")
+                print(h_list)
+                m_list = process_list_of_habs(f_list[i],"Magias:","G$:")
+                print("Magias:")
+                print(m_list)
+                print("\n \n---------------------------- \n")
         
