@@ -14,7 +14,7 @@ def find_pattern(pat : str, txt : str):
                                 break
                         j+=1
                 if (j == M):
-                        print("Pattern found at " + str(i))
+                        print("\nPattern found at " + str(i) + "\n")
                         indexes.append(i)
         return indexes
     
@@ -27,3 +27,14 @@ def multisplit(*args, txt) -> list:
     to_return = re.split(string_to_split, txt)
                 
     return to_return
+
+def unest_lists(ls : list):
+        list_to_return = []
+        last_type = ""
+        for elm in ls:
+                if hasattr(elm, '__iter__') and type(elm) != str:
+                        un_ls = unest_lists(elm)
+                        list_to_return += un_ls
+                else:
+                        list_to_return.append(elm)
+        return list_to_return
